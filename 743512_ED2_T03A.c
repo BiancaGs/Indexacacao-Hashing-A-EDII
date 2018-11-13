@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <math.h>
+
 
 /* Tamanho dos campos dos registros */
 #define TAM_PRIMARY_KEY 11
@@ -121,6 +121,9 @@ void liberar_tabela(Hashtable* tabela);
 /* <<< DECLARE AQUI OS PROTOTIPOS >>> */
 Produto Recuperar_Registro(int RRN);
 
+void gerarChave(Produto * Novo);
+
+
 /* ==========================================================================
  * ============================ FUNÇÃO PRINCIPAL ============================
  * =============================== NÃO ALTERAR ============================== */
@@ -136,11 +139,12 @@ int main()
 	int tam;
 	scanf("%d", &tam);
 	tam = prox_primo(tam);
+	printf("Tamanho da Tabela Hash %d\n", tam);
 
 	Hashtable tabela;
-	criar_tabela(&tabela, tam);
-	if (carregarArquivo) 
-		carregar_tabela(&tabela);
+	//criar_tabela(&tabela, tam);
+	// if (carregarArquivo) 
+	// 	carregar_tabela(&tabela);
 
 	/* Execução do programa */
 	int opcao = 0;
@@ -153,28 +157,28 @@ int main()
 					break;
 				case 2:
 					printf(INICIO_ALTERACAO);
-					if(alterar(tabela))
-						printf(SUCESSO);
-					else
-						printf(FALHA);
+					// if(alterar(tabela))
+					// 	printf(SUCESSO);
+					// else
+					// 	printf(FALHA);
 					break;
 				case 3:
 					printf(INICIO_BUSCA);
-					buscar(tabela);
+					// buscar(tabela);
 					break;
 				case 4:
 					printf(INICIO_EXCLUSAO);
-					if(	remover(&tabela))
-						printf(SUCESSO);
-					else
-						printf(FALHA);
+					// if(	remover(&tabela))
+					// 	printf(SUCESSO);
+					// else
+					// 	printf(FALHA);
 					break;
 				case 5:
 					printf(INICIO_LISTAGEM);
-					imprimir_tabela(tabela);
+					// imprimir_tabela(tabela);
 					break;
 				case 6:
-					liberar_tabela(&tabela);
+					// liberar_tabela(&tabela);
 					break;
 				case 10:
 					printf(INICIO_ARQUIVO);
@@ -198,6 +202,65 @@ void carregar_arquivo() {
 /*Auxiliar para a função de hash*/
 short f(char x){
 	return (x < 59) ? x - 48 : x - 54; 
+}
+
+/* Exibe o Produto */
+int exibir_registro(int rrn)
+{
+	if(rrn<0)
+		return 0;
+	float preco;
+	int desconto;
+	Produto j = Recuperar_Registro(rrn);
+  	char *cat, categorias[TAM_CATEGORIA];
+	printf("%s\n", j.pk);
+	printf("%s\n", j.nome);
+	printf("%s\n", j.marca);
+	printf("%s\n", j.data);
+	printf("%s\n", j.ano);
+	sscanf(j.desconto,"%d",&desconto);
+	sscanf(j.preco,"%f",&preco);
+	preco = preco *  (100-desconto);
+	preco = ((int) preco)/ (float) 100 ;
+	printf("%07.2f\n",  preco);
+	strncpy(categorias, j.categoria, strlen(j.categoria));
+  	
+	for (cat = strtok (categorias, "|"); cat != NULL; cat = strtok (NULL, "|"))
+    	printf("%s ", cat);
+	printf("\n");
+	
+	return 1;
+}
+
+/* ----------------------------------------*/
+int  prox_primo(int a){
+
+	int Contador = 0;
+	for(int i=1; i <= a; i++){
+		if(a%i == 0)
+			Contador++;
+	}
+	if(Contador == 2)
+		return a;
+	
+	else{
+		int flag = 0;
+		while(flag == 0){
+			
+			Contador = 0;
+			a++;
+		
+			for(int j=1; j <= a; j++){
+				if(a%j == 0)
+					Contador++;
+			}
+
+			if(Contador == 2){
+				flag = 1;
+				return a;
+			}	
+		}				
+	}
 }
 
 Produto Recuperar_Registro(int RRN){
@@ -228,28 +291,108 @@ Produto Recuperar_Registro(int RRN){
 
 }
 
-/* Exibe o Produto */
-int exibir_registro(int rrn)
-{
-	if(rrn<0)
-		return 0;
-	float preco;
-	int desconto;
-	Produto j = Recuperar_Registro(rrn);
-  	char *cat, categorias[TAM_CATEGORIA];
-	printf("%s\n", j.pk);
-	printf("%s\n", j.nome);
-	printf("%s\n", j.marca);
-	printf("%s\n", j.data);
-	printf("%s\n", j.ano);
-	sscanf(j.desconto,"%d",&desconto);
-	sscanf(j.preco,"%f",&preco);
-	preco = preco *  (100-desconto);
-	preco = ((int) preco)/ (float) 100 ;
-	printf("%07.2f\n",  preco);
-	strncpy(categorias, j.categoria, strlen(j.categoria));
-  for (cat = strtok (categorias, "|"); cat != NULL; cat = strtok (NULL, "|"))
-    printf("%s ", cat);
-	printf("\n");
-	return 1;
+void gerarChave(Produto * Novo){
+
+	Novo->pk[0] = Novo->nome[0];
+	Novo->pk[1] = Novo->nome[1];
+	Novo->pk[2] = Novo->marca[0];
+	Novo->pk[3] = Novo->marca[1];
+	Novo->pk[4] = Novo->data[0];
+	Novo->pk[5] = Novo->data[1];
+	Novo->pk[6] = Novo->data[3];
+	Novo->pk[7] = Novo->data[4];
+	Novo->pk[8] = Novo->ano[0];
+	Novo->pk[9] = Novo->ano[1]; 
+	Novo->pk[10] = '\0';
+
 }
+
+void cadastrar(Hashtable* tabela){
+
+	//Código - NÃO é inserido pelo usuário 
+	// char pk[TAM_PRIMARY_KEY];
+	// gerarChave(novo);
+
+	/*-----------------------*/
+
+	/* Interação com o Usuário */
+	Produto Novo;
+	/* CAMPOS DE TAMANHO VARIÁVEL */
+	
+	//Nome do Produto ou Modelo
+	// char Nome[TAM_NOME];
+	scanf("%[^\n]s", Novo.nome);
+	getchar();
+	//Marca
+	// char Marca[TAM_MARCA];
+	scanf("%[^\n]s", Novo.marca);
+	getchar();
+	/*-----------------------*/
+
+	/* CAMPOS DE TAMANHO FIXO */
+
+	//Data de Registro
+	// char Data[TAM_DATA];	/* DD/MM/AAAA */
+	scanf("%[^\n]s", Novo.data);
+	getchar();
+	//Ano de Lançamento
+	// char Ano[TAM_ANO];
+	scanf("%[^\n]s", Novo.ano);
+	getchar();
+	//Preço-Base
+	// char Preço[TAM_PRECO];
+	scanf("%[^\n]s", Novo.preco);
+	getchar();
+	//Desconto
+	// char Desconto[TAM_DESCONTO];
+	scanf("%[^\n]s", Novo.desconto);
+	getchar();
+	//Categorias
+	// char Categoria[TAM_CATEGORIA];
+	scanf("%[^\n]s", Novo.categoria);
+	getchar();
+	/*-----------------------*/
+
+	gerarChave(&Novo);
+
+	//Verifica se o PRODUTO existe
+	// if(Busca != NULL) {
+			// printf(ERRO_PK_REPETIDA, Novo->pk);
+			// return;
+ 	// }
+
+	// else{
+		
+		nregistros++;
+
+		//Registro Auxiliar
+		char rAuxiliar[193]; //TAM_REGISTRO
+		rAuxiliar[192] = '\0';
+
+		sprintf(rAuxiliar, "%s@%s@%s@%s@%s@%s@%s@%s@", Novo.pk, Novo.nome, Novo.marca, Novo.data, Novo.ano, Novo.preco, Novo.desconto, Novo.categoria);
+
+		//Precisamos obter o TAMANHO do REGISTRO AUXILIAR (rAuxiliar) para sabermos quantos "bytes" faltam para preencher totalmento o REGISTRO.
+		int Tamanho = strlen(rAuxiliar);
+
+		// printf("\nTamanho = %d\n", Tamanho);
+
+		int i;
+		//Preenchendo o REGISTRO por completo (192bytes)
+		for(i = Tamanho; i < 192; i++)
+			rAuxiliar[i] = '#';
+
+		// printf("\nTamanho - Final = %d", strlen(rAuxiliar));
+		// printf("\n Registro: %s \n", rAuxiliar);
+
+		strcat(ARQUIVO, rAuxiliar);
+
+		//int tRegistro = strlen(rAuxiliar);
+		//printf("%d\n", tRegistro);
+		
+		//printf("%s\n", rAuxiliar);
+		
+		//printf("%s\n", ARQUIVO);
+
+		/* ATUALIZAR ÍNDICE PRIMÁRIO*/
+}
+
