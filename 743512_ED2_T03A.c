@@ -125,6 +125,8 @@ void gerarChave(Produto * Novo);
 
 void Criar_Tabela(Hashtable *Tabela, int Tamanho);
 
+void imprimir_tabela(Hashtable Tabela);
+
 /* ==========================================================================
  * ============================ FUNÇÃO PRINCIPAL ============================
  * =============================== NÃO ALTERAR ============================== */
@@ -176,7 +178,7 @@ int main()
 					break;
 				case 5:
 					printf(INICIO_LISTAGEM);
-					// imprimir_tabela(tabela);
+					imprimir_tabela(tabela);
 					break;
 				case 6:
 					// liberar_tabela(&tabela);
@@ -411,3 +413,13 @@ void cadastrar(Hashtable* tabela){
 		/* ATUALIZAR ÍNDICE PRIMÁRIO*/
 }
 
+void imprimir_tabela(Hashtable Tabela){
+
+	for(int i=0; i<Tabela.tam; i++){
+
+		if(Tabela.v[i].estado == 0){
+			printf(POS_LIVRE, i);
+		}
+	}
+
+}
