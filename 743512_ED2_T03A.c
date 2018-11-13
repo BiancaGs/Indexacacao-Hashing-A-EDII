@@ -123,6 +123,7 @@ Produto Recuperar_Registro(int RRN);
 
 void gerarChave(Produto * Novo);
 
+void Criar_Tabela(Hashtable *Tabela, int Tamanho);
 
 /* ==========================================================================
  * ============================ FUNÇÃO PRINCIPAL ============================
@@ -142,7 +143,7 @@ int main()
 	printf("Tamanho da Tabela Hash %d\n", tam);
 
 	Hashtable tabela;
-	//criar_tabela(&tabela, tam);
+	Criar_Tabela(&tabela, tam);
 	// if (carregarArquivo) 
 	// 	carregar_tabela(&tabela);
 
@@ -260,6 +261,20 @@ int  prox_primo(int a){
 				return a;
 			}	
 		}				
+	}
+}
+
+/*Cria e inicializa a TABELA com o TAMANHO inserido pelo usuário*/
+void Criar_Tabela(Hashtable *Tabela, int Tamanho){
+
+	Tabela->tam = Tamanho;
+	Tabela->v = (Chave*)malloc(Tamanho*sizeof(Chave));
+	
+	for(int i = 0; i < Tamanho; i++){
+		/*Estado Inicial - Livre*/
+		Tabela->v[i].estado = 0;
+
+		Tabela->v[i].rrn = -1;
 	}
 }
 
