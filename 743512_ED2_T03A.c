@@ -173,10 +173,10 @@ int main()
 					break;
 				case 4:
 					printf(INICIO_EXCLUSAO);
-					// if(	remover(&tabela))
-					// 	printf(SUCESSO);
-					// else
-					// 	printf(FALHA);
+					if(	remover(&tabela))
+						printf(SUCESSO);
+					else
+						printf(FALHA);
 					break;
 				case 5:
 					printf(INICIO_LISTAGEM);
@@ -299,14 +299,20 @@ int Busca(char pk[], Hashtable *Tabela){
 	int flag = 0;
 	if(flag == 0 && strcmp(Tabela->v[Posicao].pk, pk) == 0){
 		flag = 1;
-		return Posicao;
+		if(Tabela->v[Posicao].estado == OCUPADO)
+			return Posicao;
+		else	
+			return -1;
 	}
 	else{
 		while(flag == 0 && Posicao < Tabela->tam){
 			Posicao++;
 			if(strcmp(Tabela->v[Posicao].pk, pk) == 0){
 				flag = 1;
-				return Posicao;
+				if(Tabela->v[Posicao].estado == OCUPADO)
+					return Posicao;
+				else	
+					return -1;
 			}
 		}
 		Posicao = 0;
@@ -314,7 +320,10 @@ int Busca(char pk[], Hashtable *Tabela){
 			Posicao++;
 			if(strcmp(Tabela->v[Posicao].pk, pk) == 0){
 				flag = 1;
-				return Posicao;
+				if(Tabela->v[Posicao].estado == OCUPADO)
+					return Posicao;
+				else	
+					return -1;
 			}
 		}
 	}
@@ -630,22 +639,24 @@ void buscar(Hashtable tabela){
 		printf(REGISTRO_N_ENCONTRADO);
 }
 
-// int  remover(Hashtable* tabela){
+int  remover(Hashtable* tabela){
 
-// 	char pk[TAM_PRIMARY_KEY];
-// 	memset(pk, '\0', TAM_PRIMARY_KEY);
+	char pk[TAM_PRIMARY_KEY];
+	memset(pk, '\0', TAM_PRIMARY_KEY);
 
-// 	scanf("%[^\n]s", pk);
-// 	getchar();
+	scanf("%[^\n]s", pk);
+	getchar();
 
-// 	if(Busca(pk, tabela) == -1)
-// 		return 0;
+	if(Busca(pk, tabela) == -1){
+		printf(REGISTRO_N_ENCONTRADO);
+		return 0;
+	}
 	
-// 	else{
-// 		tabela->v[Busca(pk, tabela)].estado = 2;
-// 		return 1;
-// 	}
-// }
+	else{
+		tabela->v[Busca(pk, tabela)].estado = 2;
+		return 1;
+	}
+}
 
 void imprimir_tabela(Hashtable Tabela){
 
