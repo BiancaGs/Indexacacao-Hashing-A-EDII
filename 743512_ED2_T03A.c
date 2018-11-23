@@ -309,19 +309,17 @@ int Busca(char pk[], Hashtable *Tabela){
 			return -1;
 	}
 	else{
-		while(flag == 0 && Posicao <= Tabela->tam){
+		int Auxiliar = 0;
+
+		while(flag == 0 && Auxiliar < Tabela->tam){
+			
+			Auxiliar++;
+
 			Posicao++;
-			if(strcmp(Tabela->v[Posicao].pk, pk) == 0){
-				flag = 1;
-				if(Tabela->v[Posicao].estado == OCUPADO)
-					return Posicao;
-				else	
-					return -1;
-			}
-		}
-		Posicao = -1;
-		while(flag == 0 && Posicao < Tabela->tam){
-			Posicao++;
+			
+			if(Posicao == Tabela->tam)
+				Posicao = 0;
+
 			if(strcmp(Tabela->v[Posicao].pk, pk) == 0){
 				flag = 1;
 				if(Tabela->v[Posicao].estado == OCUPADO)
@@ -637,16 +635,6 @@ void buscar(Hashtable tabela){
 				}
 			}
 		}
-		
-		// while(flag == 0 && Posicao < hash(pk, tabela.tam)){
-		// 	Posicao++;
-		// 	if(strcmp(tabela.v[Posicao].pk, pk) == 0){
-		// 		exibir_registro(tabela.v[Posicao].rrn);
-		// 		flag = 1;
-		// 		//printf("%d\n", tabela.v[Posicao].rrn);
-		// 		return;
-		// 	}
-		// }
 	}
 
 	if(flag == 0)
