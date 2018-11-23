@@ -113,7 +113,7 @@ int  prox_primo(int a);
 /*Funções do Menu*/
 void carregar_tabela(Hashtable* tabela);
 void cadastrar(Hashtable* tabela);
-int  alterar(Hashtable tabela);
+int  alterar(Hashtable *tabela);
 void buscar(Hashtable tabela);
 int  remover(Hashtable* tabela);
 void liberar_tabela(Hashtable* tabela);
@@ -127,7 +127,7 @@ void Criar_Tabela(Hashtable *Tabela, int Tamanho);
 
 void imprimir_tabela(Hashtable Tabela);
 
-int Busca(Produto Novo, Hashtable *Tabela);
+int Busca(char pk[], Hashtable *Tabela);
 
 /* ==========================================================================
  * ============================ FUNÇÃO PRINCIPAL ============================
@@ -162,10 +162,10 @@ int main()
 					break;
 				case 2:
 					printf(INICIO_ALTERACAO);
-					// if(alterar(tabela))
-					// 	printf(SUCESSO);
-					// else
-					// 	printf(FALHA);
+					if(alterar(&tabela))
+						printf(SUCESSO);
+					else
+						printf(FALHA);
 					break;
 				case 3:
 					printf(INICIO_BUSCA);
@@ -206,8 +206,7 @@ void carregar_arquivo() {
 
 
 /* Exibe o Produto */
-int exibir_registro(int rrn)
-{
+int exibir_registro(int rrn){
 	if(rrn<0)
 		return 0;
 	float preco;
@@ -235,11 +234,9 @@ int exibir_registro(int rrn)
 	while(cat != NULL){
 		printf("%s", cat);
 		cat = strtok (NULL, "|");
-		if(cat != NULL){
+		if(cat != NULL)
 			printf(" ");
-		}
 	}
-	
 	printf("\n");
 	
 	return 1;
@@ -247,9 +244,7 @@ int exibir_registro(int rrn)
 
 /*Auxiliar para a função de hash*/
 short f(char x){
-	
 	//printf("%c\n", x);
-
 	return (x < 59) ? x - 48 : x - 54; 
 }
 
@@ -257,19 +252,15 @@ short f(char x){
 
 /*Função de Hash*/
 short hash(const char* chave, int tam){
-
+	
 	//Função Hash
 	int h = 0;
-
-	for(int i= 1; i <= 8; i++){
+	for(int i= 1; i <= 8; i++)
 		h+= i*(f(chave[i-1]));
-	}
 
-	// printf("%d\n", h);
-	// printf("%d\n", tam);
-	// printf("%d\n", h%tam);
+	// printf("H %d - Tamanho %d\n", h, tam);
+	// printf("H%Tamanho %d\n", h%tam);
 	return (h%tam);
-
 }
 
 int  prox_primo(int a){
@@ -281,19 +272,17 @@ int  prox_primo(int a){
 	}
 	if(Contador == 2)
 		return a;
-	
+
 	else{
 		int flag = 0;
-		while(flag == 0){
-			
+		while(flag == 0){			
 			Contador = 0;
 			a++;
-		
+			
 			for(int j=1; j <= a; j++){
 				if(a%j == 0)
 					Contador++;
 			}
-
 			if(Contador == 2){
 				flag = 1;
 				return a;
@@ -303,33 +292,36 @@ int  prox_primo(int a){
 }
 
 /*Verifica se um PRODUTO existe - Não insere PRODUTOS repetidos*/
-int Busca(Produto Novo, Hashtable *Tabela){
+int Busca(char pk[], Hashtable *Tabela){
 
-	int Posicao = hash(Novo.pk, Tabela->tam);
+	int Posicao = hash(pk, Tabela->tam);
 
-	// printf("Posicao - Funcao Hash", Posicao);
-	// printf("tabela.v[Posicao].pk %s\n", tabela.v[Posicao].pk);
-
-	if(strcmp(Tabela->v[Posicao].pk, Novo.pk) == 0){
-		//exibir_registro(tabela.v[Posicao].rrn);
-		//printf(SUCESSO);
-		return 1;
+	int flag = 0;
+	if(flag == 0 && strcmp(Tabela->v[Posicao].pk, pk) == 0){
+		flag = 1;
+		return Posicao;
 	}
 	else{
-		int Contador = 0;
-		while(Contador < Tabela->tam){
-
+		while(flag == 0 && Posicao < Tabela->tam){
 			Posicao++;
-			if(strcmp(Tabela->v[Posicao].pk, Novo.pk) == 0){
-				// exibir_registro(tabela.v[Posicao].rrn);
-				//printf(SUCESSO);
-				return 1;
+			if(strcmp(Tabela->v[Posicao].pk, pk) == 0){
+				flag = 1;
+				return Posicao;
 			}
-			Contador++;
+		}
+		Posicao = 0;
+		while(flag == 0 && Posicao < hash(pk, Tabela->tam)){
+			Posicao++;
+			if(strcmp(Tabela->v[Posicao].pk, pk) == 0){
+				flag = 1;
+				return Posicao;
+			}
 		}
 	}
-	return 0;
 
+	if(flag == 0)
+		return -1;
+		// printf(REGISTRO_N_ENCONTRADO);
 }
 
 /*Cria e inicializa a TABELA com o TAMANHO inserido pelo usuário*/
@@ -341,7 +333,6 @@ void Criar_Tabela(Hashtable *Tabela, int Tamanho){
 	for(int i = 0; i < Tamanho; i++){
 		/*Estado Inicial - Livre*/
 		Tabela->v[i].estado = 0;
-
 		Tabela->v[i].rrn = -1;
 	}
 }
@@ -370,11 +361,7 @@ Produto Recuperar_Registro(int RRN){
 	p = strtok(NULL,"@");
 	strcpy(A.categoria,p);
 
-	/*COMENTAR*/	
-	//printf("\nRecuperar Registro - Categoria %s\n\n", A.categoria);
-	
 	return A;
-
 }
 
 void gerarChave(Produto * Novo){
@@ -442,7 +429,7 @@ void cadastrar(Hashtable* tabela){
 	gerarChave(&Novo);
 
 	//Verifica se o PRODUTO existe
-	if(Busca(Novo, tabela) == 1) {
+	if(Busca(Novo.pk, tabela) > -1) {
 		printf(ERRO_PK_REPETIDA, Novo.pk);
 		return;
  	}
@@ -481,40 +468,52 @@ void cadastrar(Hashtable* tabela){
 		
 		//printf("%s\n", ARQUIVO);
 
+		if(nregistros-1 == tabela->tam){
+			printf(ERRO_TABELA_CHEIA);
+			return;
+		}
+
 		/* ATUALIZAR ÍNDICE PRIMÁRIO*/
 		// printf("Posicao %d\n", (Novo.pk[0]*Novo.pk[1])%tabela->tam);
 		int Posicao = hash(Novo.pk, tabela->tam);
 
 		// printf("Posicao - Funcao Hash %d\n", Posicao);
-
-		int Colisoes = 0;
+		
+		int flag = 0;
+		
 		/* Insere em Local com ESTADO REMOVIDO?*/
-		if(tabela->v[Posicao].estado == 0){
-
+		if(tabela->v[Posicao].estado == 0 || tabela->v[Posicao].estado == 2){
 			// printf("Posicao Livre - Chave %s\n", Novo.pk);
-
 			tabela->v[Posicao].estado = 1;
 			strcpy(tabela->v[Posicao].pk, Novo.pk);
 			tabela->v[Posicao].rrn = nregistros-1;
 
-			printf(REGISTRO_INSERIDO, Novo.pk, Colisoes);
+			flag = 1;
+
+			printf(REGISTRO_INSERIDO, Novo.pk, 0);
 			return;
 		}
-		else if(tabela->v[Posicao].estado == 1 || tabela->v[Posicao].estado == 2){
-			int flag = 0;
-			Colisoes = 0;
 
-			// printf("Chave %s\n", Novo.pk);
-		
-			while(flag == 0){
+		//else{ //if(tabela->v[Posicao].estado == 1){ //|| tabela->v[Posicao].estado == 2){
+
+			int Colisoes = 0;
+
+			//Posição Auxiliar
+			int Auxiliar = 0;
+
+			while(flag == 0 && Auxiliar < tabela->tam ){ //&& Posicao < tabela->tam){				
 				
-				// printf("Posicao Ocupada/Removida - Chave %s\n", tabela->v[Posicao].pk);
-				
-				Posicao++;
+
 				Colisoes++;
 
-				if(tabela->v[Posicao].estado == 0){
+				Auxiliar++;
+
+				Posicao++;
+				if(Posicao == tabela->tam)
+					Posicao = 0;
 					
+				if(tabela->v[Posicao].estado == LIVRE || tabela->v[Posicao].estado == REMOVIDO){		
+				
 					flag = 1;
 
 					tabela->v[Posicao].estado = 1;
@@ -525,60 +524,132 @@ void cadastrar(Hashtable* tabela){
 					printf(REGISTRO_INSERIDO, Novo.pk, Colisoes);
 					return;
 				}
+				
 			}
+		//}
+		if(flag == 0)
+			printf(ERRO_TABELA_CHEIA);
+}
+
+int  alterar(Hashtable *tabela){
+
+	char PK[TAM_PRIMARY_KEY];
+	memset(PK, '\0', TAM_PRIMARY_KEY);
+
+	scanf("%[^\n]s", PK);
+	getchar();
+
+	if(Busca(PK, tabela) == -1)
+		printf(REGISTRO_N_ENCONTRADO);
+
+	else{
+		int RRN = tabela->v[Busca(PK, tabela)].rrn;
+		//printf("%d\n", RRN);
+		
+		//O desconto inserido precisa ser de 3 bytes com valor entre 000 e 100.
+		char Desconto[3];
+
+		int flag = 0;				
+		//getchar();
+		scanf("%[^\n]s", Desconto);
+		getchar();
+
+		if(strcmp(Desconto, "000") >= 0 && strcmp(Desconto, "100") <= 0)
+			flag = 1;
+
+		while(flag == 0){	
+			printf(CAMPO_INVALIDO);
+			//getchar();	
+			scanf("%[^\n]s", Desconto);
+			getchar();
+			
+			if(strcmp(Desconto, "000") >= 0 && strcmp(Desconto, "100") <= 0)
+				flag = 1;
 		}
-		printf(ERRO_TABELA_CHEIA);
-	//}
+
+		char *Arquivo = ARQUIVO + RRN * 192;
+		// printf("%s\n", Arquivo);
+
+		int Contador = 0;
+		while(Contador < 6){
+			if((*Arquivo) == '@')
+				Contador++;
+			Arquivo++;
+		}
+		//printf("Contador %d\n", Contador);
+		// printf("%s\n", Arquivo);
+
+		for(int i = 0; i < 3; i++){
+			*Arquivo = Desconto[i];
+			Arquivo++;
+		}
+		return 1;
+	}
 }
 
 void buscar(Hashtable tabela){
 	
 	char pk[TAM_PRIMARY_KEY];
-
+	memset(pk, '\0', TAM_PRIMARY_KEY);
 
 	scanf("%[^\n]s", pk);
 	getchar();
 
-	/*COMENTAR*/
-	//printf("Chave - Inserida %s\n", pk);
-
 	int Posicao = hash(pk, tabela.tam);
 
-	// printf("Posicao - Funcao Hash", Posicao);
-	// printf("tabela.v[Posicao].pk %s\n", tabela.v[Posicao].pk);
-
-	if(strcmp(tabela.v[Posicao].pk, pk) == 0){
+	int flag = 0;
+	if(flag == 0 && strcmp(tabela.v[Posicao].pk, pk) == 0){
 		exibir_registro(tabela.v[Posicao].rrn);
-		/*COMENTAR*/
+		flag = 1;
 		//printf("%d\n", tabela.v[Posicao].rrn);
-		//printf(SUCESSO);
 		return;
 	}
 	else{
-		int Contador = 0;
-		while(Contador < tabela.tam){
-
+		while(flag == 0 && Posicao < tabela.tam){
 			Posicao++;
 			if(strcmp(tabela.v[Posicao].pk, pk) == 0){
-
 				exibir_registro(tabela.v[Posicao].rrn);
-				/*COMENTAR*/
+				flag = 1;
 				//printf("%d\n", tabela.v[Posicao].rrn);
-
-				//printf(SUCESSO);
 				return;
 			}
-			Contador++;
+		}
+		Posicao = 0;
+		while(flag == 0 && Posicao < hash(pk, tabela.tam)){
+			Posicao++;
+			if(strcmp(tabela.v[Posicao].pk, pk) == 0){
+				exibir_registro(tabela.v[Posicao].rrn);
+				flag = 1;
+				//printf("%d\n", tabela.v[Posicao].rrn);
+				return;
+			}
 		}
 	}
-	printf(REGISTRO_N_ENCONTRADO);
+
+	if(flag == 0)
+		printf(REGISTRO_N_ENCONTRADO);
 }
 
+// int  remover(Hashtable* tabela){
+
+// 	char pk[TAM_PRIMARY_KEY];
+// 	memset(pk, '\0', TAM_PRIMARY_KEY);
+
+// 	scanf("%[^\n]s", pk);
+// 	getchar();
+
+// 	if(Busca(pk, tabela) == -1)
+// 		return 0;
+	
+// 	else{
+// 		tabela->v[Busca(pk, tabela)].estado = 2;
+// 		return 1;
+// 	}
+// }
 
 void imprimir_tabela(Hashtable Tabela){
 
 	for(int i=0; i<Tabela.tam; i++){
-
 		if(Tabela.v[i].estado == 0){
 			printf(POS_LIVRE, i);
 		}
@@ -589,5 +660,4 @@ void imprimir_tabela(Hashtable Tabela){
 			printf(POS_REMOVIDA, i);
 		}
 	}
-
 }
