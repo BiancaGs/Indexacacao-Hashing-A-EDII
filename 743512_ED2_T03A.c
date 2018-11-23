@@ -297,6 +297,10 @@ int Busca(char pk[], Hashtable *Tabela){
 	int Posicao = hash(pk, Tabela->tam);
 
 	int flag = 0;
+
+	//Posição Auxiliar 
+	int Auxiliar =0;
+
 	if(flag == 0 && strcmp(Tabela->v[Posicao].pk, pk) == 0){
 		flag = 1;
 		if(Tabela->v[Posicao].estado == OCUPADO)
@@ -305,7 +309,7 @@ int Busca(char pk[], Hashtable *Tabela){
 			return -1;
 	}
 	else{
-		while(flag == 0 && Posicao < Tabela->tam){
+		while(flag == 0 && Posicao <= Tabela->tam){
 			Posicao++;
 			if(strcmp(Tabela->v[Posicao].pk, pk) == 0){
 				flag = 1;
@@ -315,8 +319,8 @@ int Busca(char pk[], Hashtable *Tabela){
 					return -1;
 			}
 		}
-		Posicao = 0;
-		while(flag == 0 && Posicao < hash(pk, Tabela->tam)){
+		Posicao = -1;
+		while(flag == 0 && Posicao < Tabela->tam){
 			Posicao++;
 			if(strcmp(Tabela->v[Posicao].pk, pk) == 0){
 				flag = 1;
@@ -614,25 +618,35 @@ void buscar(Hashtable tabela){
 		return;
 	}
 	else{
-		while(flag == 0 && Posicao < tabela.tam){
+		int Auxiliar = 0;
+		while(flag == 0 && Auxiliar < tabela.tam){
+			
+			Auxiliar++;
+
 			Posicao++;
+			
+			if(Posicao == tabela.tam)
+				Posicao = 0;
+
 			if(strcmp(tabela.v[Posicao].pk, pk) == 0){
-				exibir_registro(tabela.v[Posicao].rrn);
-				flag = 1;
-				//printf("%d\n", tabela.v[Posicao].rrn);
-				return;
+				if(tabela.v[Posicao].estado == 1){
+					exibir_registro(tabela.v[Posicao].rrn);
+					flag = 1;
+					//printf("%d\n", tabela.v[Posicao].rrn);
+					return;
+				}
 			}
 		}
-		Posicao = 0;
-		while(flag == 0 && Posicao < hash(pk, tabela.tam)){
-			Posicao++;
-			if(strcmp(tabela.v[Posicao].pk, pk) == 0){
-				exibir_registro(tabela.v[Posicao].rrn);
-				flag = 1;
-				//printf("%d\n", tabela.v[Posicao].rrn);
-				return;
-			}
-		}
+		
+		// while(flag == 0 && Posicao < hash(pk, tabela.tam)){
+		// 	Posicao++;
+		// 	if(strcmp(tabela.v[Posicao].pk, pk) == 0){
+		// 		exibir_registro(tabela.v[Posicao].rrn);
+		// 		flag = 1;
+		// 		//printf("%d\n", tabela.v[Posicao].rrn);
+		// 		return;
+		// 	}
+		// }
 	}
 
 	if(flag == 0)
