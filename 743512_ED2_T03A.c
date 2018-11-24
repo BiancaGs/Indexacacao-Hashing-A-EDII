@@ -137,9 +137,9 @@ int main()
 	/* Arquivo */
 	int carregarArquivo = 0;
 	scanf("%d\n", &carregarArquivo); // 1 (sim) | 0 (nao)
-	if (carregarArquivo) 
+	if (carregarArquivo)
 		carregar_arquivo();
-
+	
 	/* Tabela Hash */
 	int tam;
 	scanf("%d", &tam);
@@ -148,8 +148,8 @@ int main()
 
 	Hashtable tabela;
 	Criar_Tabela(&tabela, tam);
-	// if (carregarArquivo) 
-	// 	carregar_tabela(&tabela);
+	if (carregarArquivo == 1) 
+		carregar_tabela(&tabela);
 
 	/* Execução do programa */
 	int opcao = 0;
@@ -202,6 +202,9 @@ int main()
 /* Recebe do usuário uma string simulando o arquivo completo. */
 void carregar_arquivo() {
 	scanf("%[^\n]\n", ARQUIVO);
+	
+	nregistros = strlen(ARQUIVO)/TAM_REGISTRO;
+	//printf("nregistros %d\n", nregistros);
 }
 
 
@@ -288,6 +291,58 @@ int  prox_primo(int a){
 				return a;
 			}	
 		}				
+	}
+}
+
+void carregar_tabela(Hashtable* tabela){
+
+	for(int i=0; i<nregistros; i++){
+
+		int Posicao = hash(Recuperar_Registro(i).pk, tabela->tam);
+		// printf("Posicao - Funcao Hash %d\n", Posicao);
+		
+		int flag = 0;
+		/* Insere em Local com ESTADO REMOVIDO?*/
+		if(tabela->v[Posicao].estado == 0 || tabela->v[Posicao].estado == 2){
+			// printf("Posicao Livre - Chave %s\n", Novo.pk);
+			tabela->v[Posicao].estado = 1;
+			strcpy(tabela->v[Posicao].pk, Recuperar_Registro(i).pk);
+			tabela->v[Posicao].rrn = i;
+
+			flag = 1;
+
+			// printf(REGISTRO_INSERIDO, Novo.pk, 0);
+			// return;
+		}
+		else{ //if(tabela->v[Posicao].estado == 1){ //|| tabela->v[Posicao].estado == 2){
+		
+			int Colisoes = 0;
+			//Posição Auxiliar
+			int Auxiliar = 0;
+
+			while(flag == 0 && Auxiliar < tabela->tam ){ //&& Posicao < tabela->tam){				
+				
+				Colisoes++;
+				Auxiliar++;
+				Posicao++;
+
+				if(Posicao == tabela->tam)
+					Posicao = 0;
+					
+				if(tabela->v[Posicao].estado == 0 || tabela->v[Posicao].estado == 2){		
+				
+					flag = 1;
+
+					tabela->v[Posicao].estado = 1;
+					strcpy(tabela->v[Posicao].pk, Recuperar_Registro(i).pk);
+					tabela->v[Posicao].rrn = nregistros-1;
+					// printf("RRN %d\n", tabela->v[Posicao].rrn);
+
+					// printf(REGISTRO_INSERIDO, Recuperar_Registro(i).pk, Colisoes);
+					// return;
+				}
+			}
+		}
 	}
 }
 
