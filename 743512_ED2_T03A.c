@@ -183,7 +183,7 @@ int main()
 					imprimir_tabela(tabela);
 					break;
 				case 6:
-					// liberar_tabela(&tabela);
+					liberar_tabela(&tabela);
 					break;
 				case 10:
 					printf(INICIO_ARQUIVO);
@@ -310,12 +310,8 @@ void carregar_tabela(Hashtable* tabela){
 			tabela->v[Posicao].rrn = i;
 
 			flag = 1;
-
-			// printf(REGISTRO_INSERIDO, Novo.pk, 0);
-			// return;
 		}
-		else{ //if(tabela->v[Posicao].estado == 1){ //|| tabela->v[Posicao].estado == 2){
-		
+		else{ //if(tabela->v[Posicao].estado == 1){ //|| tabela->v[Posicao].estado == 2){		
 			int Colisoes = 0;
 			//Posição Auxiliar
 			int Auxiliar = 0;
@@ -331,15 +327,11 @@ void carregar_tabela(Hashtable* tabela){
 					
 				if(tabela->v[Posicao].estado == 0 || tabela->v[Posicao].estado == 2){		
 				
-					flag = 1;
-
 					tabela->v[Posicao].estado = 1;
 					strcpy(tabela->v[Posicao].pk, Recuperar_Registro(i).pk);
-					tabela->v[Posicao].rrn = nregistros-1;
-					// printf("RRN %d\n", tabela->v[Posicao].rrn);
-
-					// printf(REGISTRO_INSERIDO, Recuperar_Registro(i).pk, Colisoes);
-					// return;
+					tabela->v[Posicao].rrn = i;
+				
+					flag = 1;
 				}
 			}
 		}
@@ -352,9 +344,6 @@ int Busca(char pk[], Hashtable *Tabela){
 	int Posicao = hash(pk, Tabela->tam);
 
 	int flag = 0;
-
-	//Posição Auxiliar 
-	int Auxiliar =0;
 
 	if(flag == 0 && strcmp(Tabela->v[Posicao].pk, pk) == 0){
 		flag = 1;
@@ -369,9 +358,8 @@ int Busca(char pk[], Hashtable *Tabela){
 		while(flag == 0 && Auxiliar < Tabela->tam){
 			
 			Auxiliar++;
-
 			Posicao++;
-			
+							
 			if(Posicao == Tabela->tam)
 				Posicao = 0;
 
@@ -534,10 +522,10 @@ void cadastrar(Hashtable* tabela){
 		
 		//printf("%s\n", ARQUIVO);
 
-		if(nregistros-1 == tabela->tam){
-			printf(ERRO_TABELA_CHEIA);
-			return;
-		}
+		// if(nregistros-1 == tabela->tam){
+		// 	printf(ERRO_TABELA_CHEIA);
+		// 	return;
+		// }
 
 		/* ATUALIZAR ÍNDICE PRIMÁRIO*/
 		// printf("Posicao %d\n", (Novo.pk[0]*Novo.pk[1])%tabela->tam);
@@ -563,22 +551,19 @@ void cadastrar(Hashtable* tabela){
 		//else{ //if(tabela->v[Posicao].estado == 1){ //|| tabela->v[Posicao].estado == 2){
 
 			int Colisoes = 0;
-
 			//Posição Auxiliar
 			int Auxiliar = 0;
 
 			while(flag == 0 && Auxiliar < tabela->tam ){ //&& Posicao < tabela->tam){				
-				
-
+			
 				Colisoes++;
-
 				Auxiliar++;
-
 				Posicao++;
+
 				if(Posicao == tabela->tam)
 					Posicao = 0;
 					
-				if(tabela->v[Posicao].estado == LIVRE || tabela->v[Posicao].estado == REMOVIDO){		
+				if(tabela->v[Posicao].estado == 0 || tabela->v[Posicao].estado == 2){		
 				
 					flag = 1;
 
@@ -601,6 +586,7 @@ int  alterar(Hashtable *tabela){
 
 	char PK[TAM_PRIMARY_KEY];
 	memset(PK, '\0', TAM_PRIMARY_KEY);
+	int fAuxiliar = 1;
 
 	scanf("%[^\n]s", PK);
 	getchar();
@@ -608,29 +594,34 @@ int  alterar(Hashtable *tabela){
 	if(Busca(PK, tabela) == -1)
 		printf(REGISTRO_N_ENCONTRADO);
 
+
 	else{
 		int RRN = tabela->v[Busca(PK, tabela)].rrn;
 		//printf("%d\n", RRN);
 		
 		//O desconto inserido precisa ser de 3 bytes com valor entre 000 e 100.
-		char Desconto[3];
+		char Desconto[50];
+		memset(Desconto, '\0', 50);
 
 		int flag = 0;				
 		//getchar();
 		scanf("%[^\n]s", Desconto);
 		getchar();
 
-		if(strcmp(Desconto, "000") >= 0 && strcmp(Desconto, "100") <= 0)
-			flag = 1;
-
+		if(strcmp(Desconto, "000") >= 0 && strcmp(Desconto, "100") <= 0 && strlen(Desconto) == 3){
+				flag = 1;
+		}
 		while(flag == 0){	
 			printf(CAMPO_INVALIDO);
 			//getchar();	
 			scanf("%[^\n]s", Desconto);
 			getchar();
+
+			fAuxiliar = 1;
 			
-			if(strcmp(Desconto, "000") >= 0 && strcmp(Desconto, "100") <= 0)
-				flag = 1;
+			if(strcmp(Desconto, "000") >= 0 && strcmp(Desconto, "100") <= 0 && strlen(Desconto) == 3){
+					flag = 1;
+			}
 		}
 
 		char *Arquivo = ARQUIVO + RRN * 192;
@@ -661,39 +652,42 @@ void buscar(Hashtable tabela){
 	scanf("%[^\n]s", pk);
 	getchar();
 
+	int flag = 0;
 	int Posicao = hash(pk, tabela.tam);
 
-	int flag = 0;
-	if(flag == 0 && strcmp(tabela.v[Posicao].pk, pk) == 0){
-		exibir_registro(tabela.v[Posicao].rrn);
-		flag = 1;
-		//printf("%d\n", tabela.v[Posicao].rrn);
-		return;
+
+	if(strcmp(tabela.v[Posicao].pk, pk) == 0){
+		if(tabela.v[Posicao].estado == OCUPADO){
+			exibir_registro(tabela.v[Posicao].rrn);
+			return;
+		}
 	}
 	else{
+		
 		int Auxiliar = 0;
-		while(flag == 0 && Auxiliar < tabela.tam){
-			
+		//flag = 0;
+		
+		while(Auxiliar < tabela.tam){ //flag == 0 &&
+		
 			Auxiliar++;
-
 			Posicao++;
 			
 			if(Posicao == tabela.tam)
 				Posicao = 0;
 
 			if(strcmp(tabela.v[Posicao].pk, pk) == 0){
-				if(tabela.v[Posicao].estado == 1){
+				if(tabela.v[Posicao].estado == OCUPADO){
 					exibir_registro(tabela.v[Posicao].rrn);
-					flag = 1;
-					//printf("%d\n", tabela.v[Posicao].rrn);
 					return;
 				}
 			}
+		
 		}
 	}
 
-	if(flag == 0)
+	// if(flag == 0)
 		printf(REGISTRO_N_ENCONTRADO);
+
 }
 
 int  remover(Hashtable* tabela){
@@ -710,10 +704,71 @@ int  remover(Hashtable* tabela){
 	}
 	
 	else{
+		// char *Arquivo = ARQUIVO +  (tabela->v[Busca(pk, tabela)].rrn) * 192;
+
+		// //printf("Arquivo\n%s\n", Arquivo);
+
+		// *Arquivo = '*';
+		// Arquivo++;
+		// *Arquivo = '|';
+
 		tabela->v[Busca(pk, tabela)].estado = 2;
 		return 1;
 	}
 }
+
+/*?*/
+void liberar_tabela(Hashtable* tabela){
+
+	for(int i = 0; i <tabela->tam; i++){
+		memset(tabela->v[i].pk, '\0', TAM_PRIMARY_KEY);
+		tabela->v[i].rrn = -1;
+		tabela->v[i].estado = 0;
+	}
+
+	free(tabela->v);
+	tabela->tam = 0;
+
+	// for(int i = 0; i < tabela->tam; i++){
+	// 	if(tabela->v[i].estado == REMOVIDO){
+	// 		memset(tabela->v[i].pk, '\0', TAM_PRIMARY_KEY);
+	// 		tabela->v[i].rrn = -1;
+	// 		tabela->v[i].estado = LIVRE;
+	// 	}
+	// }
+
+	// int RRN = 0;
+
+	// char Auxiliar[TAM_ARQUIVO];
+	// memset(Auxiliar, '\0', TAM_ARQUIVO);
+
+	// int flag = 0;
+
+	// while(RRN < (nregistros)){
+
+	// 	char Temporario[193];
+	// 	memset(Temporario, '\0', 193);
+		
+	// 	char * Arquivo = ARQUIVO + RRN * 192;
+
+	// 	if(*Arquivo != '*'){
+	// 		strncpy(Temporario, ARQUIVO + ((RRN)*192), 192);
+	// 		//printf("Temporario %s\n", Temporario);
+		
+	// 		strcat(Auxiliar, Temporario);	
+			
+	// 		flag = 1;
+	// 	}
+	// 	RRN++;
+	// }
+	// // printf("Auxiliar \n%s\n", Auxiliar);
+	// strcpy(ARQUIVO, Auxiliar);
+
+	// int newRegistros = strlen(ARQUIVO)/TAM_REGISTRO;
+
+	// nregistros = newRegistros;
+}
+
 
 void imprimir_tabela(Hashtable Tabela){
 

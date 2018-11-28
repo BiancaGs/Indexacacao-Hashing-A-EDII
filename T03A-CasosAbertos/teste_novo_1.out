@@ -1,0 +1,153 @@
+Registro MOAS231017 inserido com sucesso. Numero de colisoes: 0.
+
+Registro GECO230317 inserido com sucesso. Numero de colisoes: 0.
+
+Registro GEEV150816 inserido com sucesso. Numero de colisoes: 0.
+
+Registro GECO020818 inserido com sucesso. Numero de colisoes: 3.
+
+Registro I5AS011117 inserido com sucesso. Numero de colisoes: 2.
+
+ERRO: Tabela Hash esta cheia!
+
+********************************LISTAR********************************
+[0] Ocupado: GECO020818
+[1] Ocupado: I5AS011117
+[2] Ocupado: MOAS231017
+[3] Ocupado: GECO230317
+[4] Ocupado: GEEV150816
+**********************EXCLUIR*********************
+OPERACAO REALIZADA COM SUCESSO!
+********************************BUSCAR********************************
+Registro(s) nao encontrado!
+********************************LISTAR********************************
+[0] Ocupado: GECO020818
+[1] Ocupado: I5AS011117
+[2] Ocupado: MOAS231017
+[3] Ocupado: GECO230317
+[4] Removido
+Registro I7KI120917 inserido com sucesso. Numero de colisoes: 3.
+
+********************************LISTAR********************************
+[0] Ocupado: GECO020818
+[1] Ocupado: I5AS011117
+[2] Ocupado: MOAS231017
+[3] Ocupado: GECO230317
+[4] Ocupado: I7KI120917
+ERRO: Ja existe um registro com a chave primaria: I7KI120917.
+
+********************************BUSCAR********************************
+MOAS231017
+MOUSE GAMMER 12000 DPI
+ASUS
+23/10/03
+17
+0119.46
+PERIFERICO 
+********************************ALTERAR*******************************
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+OPERACAO REALIZADA COM SUCESSO!
+********************************BUSCAR********************************
+MOAS231017
+MOUSE GAMMER 12000 DPI
+ASUS
+23/10/03
+17
+0000.00
+PERIFERICO 
+********************************BUSCAR********************************
+GECO020818
+GEOFORCE GTX 1050 2BG
+CORSAIR
+02/08/05
+18
+0146.70
+GABINETE MOUSE PERIFERICO PLACA DE VIDEO 
+********************************ALTERAR*******************************
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+OPERACAO REALIZADA COM SUCESSO!
+********************************BUSCAR********************************
+GECO020818
+GEOFORCE GTX 1050 2BG
+CORSAIR
+02/08/05
+18
+0161.21
+GABINETE MOUSE PERIFERICO PLACA DE VIDEO 
+**********************EXCLUIR*********************
+OPERACAO REALIZADA COM SUCESSO!
+**********************EXCLUIR*********************
+OPERACAO REALIZADA COM SUCESSO!
+Registro RAKI030318 inserido com sucesso. Numero de colisoes: 3.
+
+Registro HDEV051217 inserido com sucesso. Numero de colisoes: 3.
+
+********************************LISTAR********************************
+[0] Ocupado: HDEV051217
+[1] Ocupado: I5AS011117
+[2] Ocupado: MOAS231017
+[3] Ocupado: GECO230317
+[4] Ocupado: RAKI030318
+********************************BUSCAR********************************
+RAKI030318
+RAM 4GB DDR3
+KINGSTON
+03/03/08
+18
+0185.97
+FONTE HARDWARE 
+********************************BUSCAR********************************
+HDEV051217
+HD 500GB
+EVGA
+05/12/01
+17
+0049.35
+FONTE HARDWARE HD MEMORIA RAM MOUSE PERIFERICO 
+********************************ALTERAR*******************************
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+Campo invalido! Informe novamente.
+OPERACAO REALIZADA COM SUCESSO!
+********************************BUSCAR********************************
+HDEV051217
+HD 500GB
+EVGA
+05/12/01
+17
+0052.51
+FONTE HARDWARE HD MEMORIA RAM MOUSE PERIFERICO 
+********************************LISTAR********************************
+[0] Ocupado: HDEV051217
+[1] Ocupado: I5AS011117
+[2] Ocupado: MOAS231017
+[3] Ocupado: GECO230317
+[4] Ocupado: RAKI030318
