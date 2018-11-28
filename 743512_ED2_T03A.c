@@ -339,6 +339,7 @@ void carregar_tabela(Hashtable* tabela){
 }
 
 /*Verifica se um PRODUTO existe - Não insere PRODUTOS repetidos*/
+/* Retorno o RRN caso encontre e -1 caso nao encontre ou encontre e esteja com a posicao removida*/
 int Busca(char pk[], Hashtable *Tabela){
 
 	int Posicao = hash(pk, Tabela->tam);
@@ -586,14 +587,14 @@ int  alterar(Hashtable *tabela){
 
 	char PK[TAM_PRIMARY_KEY];
 	memset(PK, '\0', TAM_PRIMARY_KEY);
-	int fAuxiliar = 1;
 
 	scanf("%[^\n]s", PK);
 	getchar();
 
-	if(Busca(PK, tabela) == -1)
+	if(Busca(PK, tabela) == -1){
 		printf(REGISTRO_N_ENCONTRADO);
-
+		return 0;
+	}
 
 	else{
 		int RRN = tabela->v[Busca(PK, tabela)].rrn;
@@ -616,8 +617,6 @@ int  alterar(Hashtable *tabela){
 			//getchar();	
 			scanf("%[^\n]s", Desconto);
 			getchar();
-
-			fAuxiliar = 1;
 			
 			if(strcmp(Desconto, "000") >= 0 && strcmp(Desconto, "100") <= 0 && strlen(Desconto) == 3){
 					flag = 1;
